@@ -2,10 +2,10 @@
 * two-way tabulation
 
 /* I train Afghan researchers and data analysts to use Stata instead of Excel for data analysis.
-when i describe two way tabulation it's for some of trainees it's confusing how the numbers change when we use [,row] and [,col] options.
+when I describe two-way tabulation for some of trainees it's confusing how the numbers are changing when we use [,row] and [,col] options.
 
-I decided to program a new command named etab.
-In this command we don't need to use [,row] or [,col] options, instead I programmed this command to add an [, percentage()] option.
+I decided to program my own command named etab.
+In this command we don't need to use [,row] or [,col] options, instead I programmed this command to add [, percentage()] option.
 so instead of */ tab var1 var2, ro /* we can have the same result by typing */ tab var1 var2, p(var1) /* and instead of */ tab var1 var2, col /* we can write */ tab var1 var2, p(var2)
 
 
