@@ -35,7 +35,7 @@ if "`graph'"=="pie" {
 graph pie, over(miss) plabel(_all sum) legend(order(1 "Non-missing values" 2 "Missing values")) by(, plegend(on)) by(vars)
 }
 else if "`graph'" == "bar"{
-graph bar (count), over(miss) blabel(bar, size(small) position(base)) by(, note("1= Missing values,  0 = Non-missing values")) scheme(s2gcolor) by(vars)
+graph bar (count), over(miss) ascategory asyvars bar(1, fcolor(navy)) bar(2, fcolor(maroon)) blabel(bar, size(small) position(base)) by(, note("1= Missing values,  0 = Non-missing values")) scheme(s2gcolor) by(vars)
 }
 else if "`graph'" !="bar" | "`graph'" !="pie" {
 dis as error "option graph() incorrectly specified"
