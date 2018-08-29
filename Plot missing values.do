@@ -2,81 +2,60 @@
 						* Plot missing values 
 
 /* Someone asked me how to plot missing values in a list of variables in a dataset.
-I can do it using visdat package in R, but since there is no command in Stata to plot missing values in a dataset, I decided to progrm my own command.
+I can do it using visdat package in R, but since there is no command in Stata to plot missing values in a dataset, I decided to program my own command.
 
-I named this command [missplot]. The syntax of missplot is:
-missplot varlist [if] [in], list
+I named this command "missplot". The syntax of missplot is:
+missplot varlist [if] [in], [options]
+
+You can define below options:
+	. graph(bar)   -> to visulize missing vlaues in bar chart.
+	. graph(pie)   -> to visualize missing vlaues in pie chart.
 */
 
 * Codes
 cap program drop missplot
-program def missplot 
-syntax [varlist] [if] [in] [, list ]
+program def missplot
+syntax [varlist] [if] [in] , graph(string)
+tempvar temp
+mark `temp' `if' `in' 
 qui {
 snapshot save
 local snap = `r(snapshot)'
-tempvar temp
-mark `temp' `if' `in' 
+
 keep if `temp'
 keep `varlist'
 foreach i of varlist * {
-cap confirm string variable `i'
-if _rc==0 {
-replace `i'="0" if `i'!=""
-replace `i'="1" if `i'==""
-destring `i', replace
+gen miss`i'=(missing(`i'))
+drop `i'
 }
-else if _rc!=0 {
-recode `i' (.=1)(else = 0)
-}
-sum `i'
-if `r(mean)' == 0 {
-drop `i' 
-}
-}
-des
-if `r(k)' == 0 {
-dis as text in red ". No missing values found"
-snapshot restore `snap'
-snapshot erase `snap'
-exit
-}
-else 
-{
-ds
-rename (*) (miss*)
-gen id = _n
+gen id=_n
 reshape long miss, i(id) j(vars, "string")
 }
-lab def miss 1"Missing values" 0"Non-missing values"
-lab val miss miss
-tabplot miss var, showval sep(miss) bar1(bfcolor(blue*0.3 blcolor(blue))) bar2(blcolor(red) bfcolor(red*0.3)) xtitle("") ytitle("") subtitle("Counts")
+if "`graph'"=="pie" {
+graph pie, over(miss) plabel(_all sum) legend(order(1 "Non-missing values" 2 "Missing values")) by(, plegend(on)) by(vars)
 }
-if "`list'" ~= "" {
-collapse (count) miss if miss==1, by(vars)
-gsort -miss
-list , noobs
+else if "`graph'" == "bar"{
+graph bar (count), over(miss) blabel(bar, size(small) position(base)) by(, note("1= Missing values,  0 = Non-missing values")) scheme(s2gcolor) by(vars)
 }
-else 
-{
+else if "`graph'" !="bar" | "`graph'" !="pie" {
+dis as error "option graph() incorrectly specified"
+}
 snapshot restore `snap'
 snapshot erase `snap'
-exit 
-}
 end
 
 * let's use studentsurvey data from stata website
 webuse studentsurvey, clear
 
 * to visualize missing values in all variables
-missplot *
+missplot *, graph(bar)
+missplot *, graph(pie)
 
 * to visualize missing values if age if greater thatn 18
-missplot * if age>18
+missplot * if age>18, graph(bar)
+missplot * if age>18, graph(pie)
 
 * to visualize missing values in first 50 observations
-missplot * in 1/50
-
-* to visulize missing values in all variables and display list of total number of missing value in each variable 
-missplot *, list
+missplot * in 1/50, graph(bar)
+missplot * in 1/50, graph(pie)
 
