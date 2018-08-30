@@ -1,10 +1,13 @@
+/*
+						 Plot missing values 
 
-						* Plot missing values 
+In Stata, there isn’t any command to visualize missing values in a list of variables.
+However, you can do it manually by following several steps. For example, replace all variables into dummy, reshape it from wide into long format, then plot it.
+Instead, I suggest to program your own command. It simplifies your work and eliminates repetitive tasks. You get better at programming too.
 
-/* Someone asked me how to plot missing values in a list of variables in a dataset.
-I can do it using visdat package in R, but since there is no command in Stata to plot missing values in a dataset, I decided to program my own command.
-
+Here is how I programmed a new command to visualize number of missing and non-missing values.
 I named this command "missplot". The syntax of missplot is:
+
 missplot varlist [if] [in], [options]
 
 You can define below options:
