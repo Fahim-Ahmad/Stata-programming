@@ -19,7 +19,7 @@ You can define below options:
 			  The default is [n(frequency)]
 			  
 	. all	       -> Specifies that all variables should be plotted, regardless of whether they contain missing values.
-			The default of is to omit variables from the plot if they have no missing values	
+			The default is to omit variables from the plot if they have no missing values	
 */
 
 * Codes
