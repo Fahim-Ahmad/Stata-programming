@@ -21,31 +21,29 @@ You can define below options:
 */
 
 * Codes
-* define your command name
 cap program drop missplot
 program def missplot
-* syntax of your command
-syntax [varlist] [if] [in] , graph(string) [n(string)]
+syntax [varlist] [if] [in] [,graph(string) n(string)]
 tempvar temp
 mark `temp' `if' `in' 
 qui {
-snapshot save
-local snap = `r(snapshot)'
-keep if `temp'
-keep `varlist'
+	snapshot save
+	local snap = `r(snapshot)'
+	keep if `temp'
+	keep `varlist'
 * change all variables into dummy
-foreach i of varlist * {
-gen miss`i'=(missing(`i'))
-drop `i'
-}
+	foreach i of varlist * {
+	gen miss`i'=(missing(`i'))
+	drop `i'
+	}
 * reshape the data from wide into long format
-gen id=_n
-reshape long miss, i(id) j(vars, "string")
+	gen id=_n
+	reshape long miss, i(id) j(vars, "string")
 }
-* visualize number of missing and non-missing values
+* visualize missing and non-missing values
 ** in a pie chart
 if "`graph'"=="pie" {
-		if "`graph'"=="pie" & "`n'"!="" {
+	if "`graph'"=="pie" & "`n'"!="" {
 		if "`graph'"=="pie" & "`n'"=="percent" {
 		graph pie, over(miss) plabel(_all percent) legend(order(1 "Non-missing values" 2 "Missing values")) by(, plegend(on)) by(vars)
 		}
@@ -56,13 +54,13 @@ if "`graph'"=="pie" {
 		dis as error "option n() incorrectly specified"		
 		}
 		}
-		else if "`graph'"=="pie" {
+	else if "`graph'"=="pie" {
 		graph pie, over(miss) plabel(_all sum) legend(order(1 "Non-missing values" 2 "Missing values")) by(, plegend(on)) by(vars)
-		}
+	}
 }
 ** in a bar chart:
 else if "`graph'" == "bar" {		
-		if "`graph'" == "bar" & "`n'" != "" {		
+	if "`graph'" == "bar" & "`n'" != "" {		
 		if "`graph'" == "bar" & "`n'" == "percent" {
 		graph bar , over(miss) by(vars) ascategory asyvars bar(1, fcolor(navy)) bar(2, fcolor(maroon)) blabel(bar, size(small) position(base)) scheme(s2gcolor) by(vars) legend(order(1 "Non-missing values" 2 "Missing values"))
 		}
@@ -73,9 +71,9 @@ else if "`graph'" == "bar" {
 		dis as error "option n() incorrectly specified"
 		}
 		}		
-		else if "`graph'" == "bar" {
+	else if "`graph'" == "bar" {
 		graph bar (count), over(miss) ascategory asyvars bar(1, fcolor(navy)) bar(2, fcolor(maroon)) blabel(bar, size(small) position(base)) scheme(s2gcolor) by(vars) legend(order(1 "Non-missing values" 2 "Missing values"))
-		}
+	}
 }
 * display error message if the option [,graph()] in incorrectly specified
 else if "`graph'" !="bar" | "`graph'" !="pie" {
