@@ -11,11 +11,11 @@ I named this command "missplot". The syntax of missplot is:
 missplot varlist [if] [in], [options]
 
 You can define below options:
-	. graph(bar)   -> to visulize missing vlaues in bar chart.
-	. graph(pie)   -> to visualize missing vlaues in pie chart.
+	. graph(bar)   -> to visualize missing values in bar chart.
+	. graph(pie)   -> to visualize missing values in pie chart.
 	
-	. n(frequency) -> Graph of frequencies within each categories.
-	. n(percent)   -> Graph of percent of frequencies within categories.
+	. n(frequency) -> Graph of frequencies within each category.
+	. n(percent)   -> Graph of percent of frequencies within each category.
 			  The default is [n(frequency)]
 			  
 	. all	       -> Specifies that all variables should be plotted, regardless of whether they contain missing values.
